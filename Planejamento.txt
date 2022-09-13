@@ -1,0 +1,35 @@
+Supermarket Hubvet
+
+Etidades:
+ - User
+ - Market
+ - Product
+ - Sector
+
+Relationship:
+ - User -> Market (A makert )
+ - Market -> Product (A product will always belong in a market).
+ - Market <-> Sector (A sector will always belong to several markets).
+ - Product <-> Sector (A product will always belong in a sector / A sector will always belong in a product).
+
+Fields:
+ Users:
+  - Padrão Laravel
+ 
+ Market:
+  - id
+  - name
+  - address
+
+ Sector:
+  - id
+  - name
+  
+ Product:
+  - id
+  - name
+  - description
+  - price
+  - quantify
+
+

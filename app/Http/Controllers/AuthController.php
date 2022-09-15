@@ -8,10 +8,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 
-class AuthController extends Controller
+class AuthController extends BaseController
 {
-    public CONST successStatus = 200;
-
     /**
      * validate register api
      */
@@ -34,26 +32,26 @@ class AuthController extends Controller
         ]);
         
         if(!Auth::attempt($credentials)){
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Unauthorized',
-            ], 401);   
+            return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']); 
         }
         $user = Auth::user();
         $success['token'] = $user->createToken($user->email)->accessToken;
-        return response()->json([
-            'success' => $success
-        ], AuthController::successStatus);
+        $success['name'] = $user->name;
+
+        return $this->sendResponse($success, 'User login successfully.');
     }
     /**
      * register api
      */
     public function register(Request $request){
-        if($this->validator($request->all())->fails()){
-            $error = $this->validator($request->all())->messages();
-            return response()->json([
-                $error
-            ], 401); 
+        $validate = Validator::make($data, [
+            'name' => ['required', 'string', 'min:10','max:255'],
+            'username' => ['required', 'string', 'min:6', 'unique:mysql.users'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:mysql.users'],
+            'password' => ['required', 'string', 'min:6', 'confirmed'],
+        ]);
+        if($validate->fails()){
+            return $this->sendError('Validation Error.', $validator->errors()); 
         }
         $rawData = $request->all();
         $rawData['password'] = Hash::make($request->password);
@@ -61,9 +59,7 @@ class AuthController extends Controller
         $success['token'] = $user->createToken($user->email)->accessToken;
         $success['name'] = $user->name;
         
-        return response()->json([
-            'success' =>  $success
-        ], AuthController::successStatus);
+        return $this->sendResponse($success, 'User register successfully.');
 
     }
 }

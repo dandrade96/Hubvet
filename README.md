@@ -60,14 +60,14 @@ This is the application overview route:
 ### Show API :
 
 - Verb.: `GET`, URL: `{base_url}/api/supermarket/{entities}/{id}`
-
+#
 ### Update API :
 
 - Verb.: `PUT`, URL: `{base_url}/api/supermarket/{entities}/{id}`
-
+#
 ### Delete API :
 
 - Verb.: `DELETE`, URL: `{base_url}/api/supermarket/{entities}/{id}`
-
+#
 ### Conclusion
 After all the information above, your application will be live in full working order.

@@ -18,11 +18,13 @@ class UserSeeder extends Seeder
     {
         User::create([
             'name' => 'market1',
+            'username' => 'market1',
             'email' => 'market1@market1.com',
             'password' => Hash::make('123456'),
         ]);
         User::create([
             'name' => 'market2',
+            'username' => 'market2',
             'email' => 'market2@market2.com',
             'password' => Hash::make('123456'),
         ]);

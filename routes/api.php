@@ -29,9 +29,9 @@ Route::get('/login', function(){
 })->name('login');
 Route::post('/login', [ AuthController::class, 'login' ]);
 Route::post('/register', [ AuthController::class, 'register' ]);
-Route::get('/logout', [ AuthController::class, 'logout' ])->name('logout');
+Route::get('/logout', [ AuthController::class, 'logout' ])->middleware('auth:api');
 Route::middleware('auth:api')->prefix('supermarket')->group(function(){
-    Route::get('/home', [ SupermarketController::class, 'index' ])->name('home');
+    Route::get('/home', [ SupermarketController::class, 'index' ]);
 
     Route::resource('markets', '\App\Http\Controllers\MarketController');
     Route::resource('sectors','\App\Http\Controllers\SectorController');

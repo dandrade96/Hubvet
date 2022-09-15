@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Laravel\Passport\RefreshToken;
+use Laravel\Passport\Token;
 use App\Models\User;
 
 class AuthController extends BaseController
@@ -61,5 +63,16 @@ class AuthController extends BaseController
         
         return $this->sendResponse($success, 'User register successfully.');
 
+    }
+    /**
+     * logout api
+     */
+    public function logout(){
+        if (Auth::check()) {
+            Auth::user()->token()->revoke();
+            return response()->json(['success' =>'logout_success'],200); 
+        }else{
+            return response()->json(['error' =>'api.something_went_wrong'], 500);
+        }
     }
 }

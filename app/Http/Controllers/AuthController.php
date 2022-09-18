@@ -50,7 +50,7 @@ class AuthController extends BaseController
             'name' => ['required', 'string', 'min:10','max:255'],
             'username' => ['required', 'string', 'min:6', 'unique:mysql.users'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:mysql.users'],
-            'password' => ['required', 'string', 'min:6', 'confirmed'],
+            'password' => ['required', 'string', 'min:6'],
         ]);
         if($validate->fails()){
             return $this->sendError('Validation Error.', $validator->errors()); 
@@ -62,7 +62,6 @@ class AuthController extends BaseController
         $success['name'] = $user->name;
         
         return $this->sendResponse($success, 'User register successfully.');
-
     }
     /**
      * logout api

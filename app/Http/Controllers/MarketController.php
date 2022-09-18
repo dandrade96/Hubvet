@@ -5,6 +5,7 @@ use App\Http\Resources\MarketResource;
 use Illuminate\Http\Request;
 use App\Models\Market;
 use App\Http\Controllers\BaseController as BaseController;
+
 use Validator;
 
 class MarketController extends BaseController

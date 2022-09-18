@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 
 class MarketResource extends JsonResource
 {
@@ -20,7 +21,7 @@ class MarketResource extends JsonResource
             'address' => $this->address,
             'created_at' => $this->created_at->format('d/m/Y'),
             'updated_at' => $this->updated_at->format('d/m/Y'),
-            'user_id' => $this->user_id,
+            'user_id' => Auth::user()->id,
         ];
     }
 }

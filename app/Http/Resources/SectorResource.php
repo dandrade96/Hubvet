@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 
 class SectorResource extends JsonResource
 {
@@ -19,7 +20,7 @@ class SectorResource extends JsonResource
             'name' => $this->name,
             'created_at' => $this->created_at->format('d/m/Y'),
             'updated_at' => $this->updated_at->format('d/m/Y'),
-            'user_id' => $this->user_id,
+            'user_id' => Auth::user()->id,
             'market_id' => $this->market_id,
         ];
     }

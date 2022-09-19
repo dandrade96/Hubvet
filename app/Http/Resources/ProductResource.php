@@ -24,6 +24,7 @@ class ProductResource extends JsonResource
             'updated_at' => $this->updated_at->format('d/m/Y'),
             'market_id' => $this->market_id,
             'sector_id' => $this->sector_id,
+            'user_id' => $this->user_id,
         ];
     }
 }

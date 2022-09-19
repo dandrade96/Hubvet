@@ -5,6 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use App\Models\Market;
 use App\Models\Sector;
+use App\Models\User;
 
 return new class extends Migration
 {
@@ -24,6 +25,7 @@ return new class extends Migration
             $table->timestamps();
             $table->foreignIdFor(Market::class)->references('id')->on('markets')->onUpdate('CASCADE')->onDelete('CASCADE');
             $table->foreignIdFor(Sector::class)->references('id')->on('sectors')->onUpdate('CASCADE')->onDelete('CASCADE');
+            $table->foreignIdFor(User::class)->references('id')->on('users')->onUpdate('CASCADE')->onDelete('CASCADE');
             
         });
     }

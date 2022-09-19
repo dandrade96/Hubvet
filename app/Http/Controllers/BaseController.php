@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller as Controller;
 
 class BaseController extends Controller
@@ -16,6 +17,7 @@ class BaseController extends Controller
     {
         $response = [
             'success'   => true,
+            'user'      => Auth::user()->name,
             'data'      => $result,
             'message'   => $message
         ];

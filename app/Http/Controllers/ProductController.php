@@ -16,7 +16,7 @@ class ProductController extends BaseController
      */
     public function index()
     {
-        $product = Product::all();
+        $product = Product::where('user_id', Auth::user()->id)->get();
 
         return $this->sendResponse(ProductResource::collection($product), 'Product retrieved successfully.');
     }
@@ -30,6 +30,7 @@ class ProductController extends BaseController
     {
 
         $field = $request->all();
+        $field['user_id'] = Auth::user()->id;
         $validator = Validator::make($field, [
             'name' => ['required', 'min:3'],
             'description' => ['required'],
@@ -52,7 +53,7 @@ class ProductController extends BaseController
      */
     public function show($id)
     {
-        $product = Product::find($id);
+        $product = Product::where('user_id', Auth::user()->id)->find($id);
         
         if(is_null($product)){
             return $this->sendError('Product not found.');
@@ -78,15 +79,14 @@ class ProductController extends BaseController
             'quantify' => ['required', 'numeric','min:0'],
         ]);
 
-        if($validator->fails()){
-            return $this->sendError('Validation Error.', $validator->errors());
-        }
+        if($validator->fails()) return $this->sendError('Validation Error.', $validator->errors());
+        if($product->user_id != Auth::user()->id) return $this->sendError('Product not found.');
 
         $product->name = $field['name'];
         $product->description = $field['description'];
         $product->price = $field['price'];
         $product->quantify = $field['quantify'];
-        $product->save();
+        $product->where('user_id', Auth::user()->id)->save();
 
         return $this->sendResponse(new ProductResource($product), 'Product updated successfully.');
     }
@@ -95,7 +95,10 @@ class ProductController extends BaseController
      */
     public function destroy(Product $product)
     {
-        $product->delete();
+
+        if($product->user_id != Auth::user()->id) return $this->sendError('Product not found.');
+
+        $product->where(['user_id' => Auth::user()->id, 'id' => $product->id])->delete();
 
         return $this->sendResponse([], 'Product deleted successfully.');
     }

@@ -5,7 +5,7 @@ use App\Http\Resources\MarketResource;
 use Illuminate\Http\Request;
 use App\Models\Market;
 use App\Http\Controllers\BaseController as BaseController;
-
+use Illuminate\Support\Facades\Auth;
 use Validator;
 
 class MarketController extends BaseController
@@ -17,7 +17,7 @@ class MarketController extends BaseController
      */
     public function index()
     {
-        $market = Market::all();
+        $market = Market::where('user_id', Auth::user()->id)->get();
 
         return $this->sendResponse(MarketResource::collection($market), 'Market retrieved successfully.');
     }
@@ -31,6 +31,7 @@ class MarketController extends BaseController
     {
 
         $field = $request->all();
+        $field['user_id'] = Auth::user()->id;
         $validator = Validator::make($field, [
             'name' => ['required', 'min:3'],
             'address' => ['required'],
@@ -49,7 +50,7 @@ class MarketController extends BaseController
      */
     public function show($id)
     {
-        $market = Market::find($id);
+        $market = Market::where('user_id', Auth::user()->id)->find($id);
         
         if(is_null($market)){
             return $this->sendError('Market not found.');
@@ -73,22 +74,23 @@ class MarketController extends BaseController
             'address' =>['required'],
         ]);
 
-        if($validator->fails()){
-            return $this->sendError('Validation Error.', $validator->errors());
-        }
+        if($validator->fails()) return $this->sendError('Validation Error.', $validator->errors());
+        if($market->user_id != Auth::user()->id) return $this->sendError('Market not found.');
 
         $market->name = $field['name'];
         $market->address = $field['address'];
-        $market->save();
-
+        $market->where('user_id', Auth::user()->id)->save();
+       
         return $this->sendResponse(new MarketResource($market), 'Market updated successfully.');
     }
     /**
      *  Remove the specified resource from storage.
      */
-    public function destroy(Market $market)
+    public function destroy($id, Market $market)
     {
-        $market->delete();
+        if($market->user_id != Auth::user()->id) return $this->sendError('Market not found.');
+
+        $market->where(['user_id' => Auth::user()->id, 'id' => $market->id])->delete();
 
         return $this->sendResponse([], 'Market deleted successfully.');
     }

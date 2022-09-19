@@ -21,7 +21,7 @@ class MarketResource extends JsonResource
             'address' => $this->address,
             'created_at' => $this->created_at->format('d/m/Y'),
             'updated_at' => $this->updated_at->format('d/m/Y'),
-            'user_id' => Auth::user()->id,
+            'user_id' => $this->user_id,
         ];
     }
 }

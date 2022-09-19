@@ -16,7 +16,7 @@ class SectorController extends BaseController
      */
     public function index()
     {
-        $sector = Sector::all();
+        $sector = Sector::where('user_id', Auth::user()->id)->get();
 
         return $this->sendResponse(SectorResource::collection($sector), 'Sector retrieved successfully.');
     }
@@ -30,9 +30,9 @@ class SectorController extends BaseController
     {
 
         $field = $request->all();
+        $field['user_id'] = Auth::user()->id;
         $validator = Validator::make($field, [
             'name' => ['required', 'min:3'],
-            'user_id' => ['required'],
             'market_id' => ['required'],
         ]);
         if($validator->fails()){
@@ -49,7 +49,7 @@ class SectorController extends BaseController
      */
     public function show($id)
     {
-        $sector = Sector::find($id);
+        $sector = Sector::where('user_id', Auth::user()->id)->find($id);
         
         if(is_null($sector)){
             return $this->sendError('sector not found.');
@@ -72,12 +72,11 @@ class SectorController extends BaseController
             'name' => ['required', 'min:3'],
         ]);
 
-        if($validator->fails()){
-            return $this->sendError('Validation Error.', $validator->errors());
-        }
+        if($validator->fails()) return $this->sendError('Validation Error.', $validator->errors());
+        if($product->user_id != Auth::user()->id) return $this->sendError('Sector not found.');
 
         $sector->name = $field['name'];
-        $sector->save();
+        $sector->where('user_id', Auth::user()->id)->save();
 
         return $this->sendResponse(new SectorResource($sector), 'Sector updated successfully.');
     }
@@ -86,7 +85,9 @@ class SectorController extends BaseController
      */
     public function destroy(Sector $sector)
     {
-        $sector->delete();
+        if($sector->user_id != Auth::user()->id) return $this->sendError('Sector not found.');
+
+        $sector->where(['user_id' => Auth::user()->id, 'id' => $sector->id])->delete();
 
         return $this->sendResponse([], 'Sector deleted successfully.');
     }

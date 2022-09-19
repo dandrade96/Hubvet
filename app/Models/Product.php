@@ -21,6 +21,7 @@ class Product extends Model
         'quantify',
         'market_id',
         'sector_id',
+        'user_id',
     ];
 
      /**
